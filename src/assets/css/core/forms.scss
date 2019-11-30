@@ -1,0 +1,33 @@
+.checkbox {
+    display: inline-block;
+    position: relative;
+    margin: 0 15px 0 0;
+    cursor: pointer;
+}
+
+.checkbox--checked {
+    .checkbox__circle {
+        background-color: $color-gray-text;
+    }
+}
+
+.checkbox__label {
+    margin-left: 5px;
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.checkbox__circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid $color-gray-text;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.dropdown {
+    margin-right: 10px;
+}
