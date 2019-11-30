@@ -1,0 +1,117 @@
+.dot-matrix-chart {
+    
+}
+
+.dot-matrix-chart__container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    position: relative;
+}
+
+.dot-matrix-chart__info {
+    width: 230px;
+    min-height: 200px;
+    position: absolute;
+    right: -230px;
+    top: -5px;
+    background-color: $color-white;
+    box-shadow: 0px 0px 25px rgba($color-black, 0.2);
+    z-index: 20;
+    color: $color-gray-text;
+
+    &::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        background-color: $color-white;
+        transform: rotate(45deg);
+        top: 4px;
+        left: -10px;
+        z-index: 19;
+    }
+}
+
+.dot-matrix-chart__info-container {
+    width: 100%;
+    padding: 20px;
+}
+
+.dot-matrix-chart__info-title {
+    margin-bottom: 5px;
+    font-weight: 900;
+    p {
+        margin: 0;
+    }
+}
+
+.dot-matrix-chart__info-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dot-matrix-chart__info-date {
+    font-size: 12px;
+}
+
+.dot-matrix-chart__info-number--swipes,
+.dot-matrix-chart__info-number--yes,
+.dot-matrix-chart__info-number--no {
+    font-weight: 500;
+}
+
+.dot-matrix-chart__info-number--swipes {
+    color: $color-gray;
+}
+.dot-matrix-chart__info-number--yes {
+    color: $color-yellow;
+}
+.dot-matrix-chart__info-number--no {
+    color: $color-blue;
+}
+
+.dot-matrix-chart__info-chart {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    font-size: 18px;
+    font-weight: 900;
+}
+.dot-matrix-chart__info-chart-yes,
+.dot-matrix-chart__info-chart-no {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: width .6s ease;
+}
+.dot-matrix-chart__info-chart-yes {
+    background-color: $color-blue;
+    height: 100%;
+}
+.dot-matrix-chart__info-chart-no {
+    background-color: $color-yellow;
+    height: 100%;
+}
+
+.dot-matrix-chart__dot-container {
+    position: relative;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: auto;
+    height: auto;
+    padding-right: 7px;
+    padding-bottom: 7px;
+}
+
+.dot-matrix-chart__dot {
+    width: 15px;
+    height: 15px;
+    background-color: $color-gray-light;
+    border-radius: 50%;
+}

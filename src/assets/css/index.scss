@@ -1,7 +1,12 @@
 // Core
+@import './core/html.scss';
 @import './core/colors.scss';
+@import './core/typography.scss';
+@import './core/forms.scss';
 
 // Screens
 @import './screens/main.scss';
 
 // Components
+@import './components/dot-matrix-chart.scss';
+@import './components/statistics.scss';
