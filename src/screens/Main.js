@@ -13,7 +13,7 @@ class Main extends React.Component {
             <div className="main wrap container-fluid">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h1>Swiper Dashboard</h1>
+                        <h1>Swiper Dashboard (Mock data!)</h1>
                     </div>
                 </div>
                 <div className="row">
