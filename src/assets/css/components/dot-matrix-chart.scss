@@ -107,6 +107,11 @@
     height: auto;
     padding-right: 7px;
     padding-bottom: 7px;
+    &:hover {
+        .dot-matrix-chart__dot {
+            border: 2px $color-gray solid;
+        }
+    }
 }
 
 .dot-matrix-chart__dot {
@@ -114,4 +119,5 @@
     height: 15px;
     background-color: $color-gray-light;
     border-radius: 50%;
+    transition: border .3s ease;
 }

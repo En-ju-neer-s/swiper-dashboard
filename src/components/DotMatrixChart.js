@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Checkbox from './Checkbox';
 import CountUp from 'react-countup';
+import { motion, AnimatePresence } from 'framer-motion';
 import { mix } from 'chroma-js';
 import { sortBy, orderBy, fromPairs, toPairs } from 'lodash';
 
@@ -176,23 +177,30 @@ class DotMatrixChart extends Component {
                                 </div>
                             }
                             {this.state.articles.length > 0 &&
-                                this.state.articles.map((article, index) => {
-                                    if ((article.paper === 'nos' && !this.state.nos) ||
-                                        (article.paper === 'nrc' && !this.state.nrc) ||
-                                        (article.paper === 'telegraaf' && !this.state.telegraaf) ||
-                                        (article.paper === 'nu' && !this.state.nu) ||
-                                        (article.paper === 'joop' && !this.state.joop)) {
-                                        return;
-                                    }
-                                    return (
-                                        <div className="dot-matrix-chart__dot-container"
-                                            key={index}
-                                            onMouseEnter={() => { this.hoverDot(article) }}
-                                            onMouseLeave={() => { this.leaveDot(article) }}>
-                                            <div className="dot-matrix-chart__dot" style={{ backgroundColor: mix('#FFD747', '#26BFBF', article.totalYesPercent) }}></div>
-                                        </div>
-                                    );
-                                })
+                                <AnimatePresence>
+                                    {this.state.articles.map((article, index) => {
+                                        if ((article.paper === 'nos' && !this.state.nos) ||
+                                            (article.paper === 'nrc' && !this.state.nrc) ||
+                                            (article.paper === 'telegraaf' && !this.state.telegraaf) ||
+                                            (article.paper === 'nu' && !this.state.nu) ||
+                                            (article.paper === 'joop' && !this.state.joop)) {
+                                            return;
+                                        }
+                                        return (
+                                            <motion.div
+                                                positionTransition={{ duration: 0.3, type: "tween" }}
+                                                initial={{ opacity: 0, scale: 0 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0 }}
+                                                className="dot-matrix-chart__dot-container"
+                                                key={index}
+                                                onMouseEnter={() => { this.hoverDot(article) }}
+                                                onMouseLeave={() => { this.leaveDot(article) }}>
+                                                <div className="dot-matrix-chart__dot" style={{ backgroundColor: mix('#FFD747', '#26BFBF', article.totalYesPercent) }}></div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </AnimatePresence>
                             }
                         </div>
                     </div>
