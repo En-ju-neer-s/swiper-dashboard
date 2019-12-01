@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import Checkbox from './Checkbox';
 import CountUp from 'react-countup';
+import { motion, AnimatePresence } from 'framer-motion';
 import { mix } from 'chroma-js';
+import { sortBy, orderBy, fromPairs, toPairs } from 'lodash';
 
 class DotMatrixChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
             nrc: true,
-            telegraaf: false,
-            nu: false,
-            joop: false,
-            nos: false,
+            telegraaf: true,
+            nu: true,
+            joop: true,
+            nos: true,
             perKrant: false,
             articles: [],
             hover: false,
@@ -30,6 +32,7 @@ class DotMatrixChart extends Component {
 
     setArticles = () => {
         let newArticles = [];
+        let papers = ['nrc', 'telegraaf', 'nu', 'joop', 'nos'];
 
         for (let i = 0; i < 500; i++) {
             let randomSwipes = Math.floor(Math.random() * (5000 - 0 + 1) + 0);
@@ -37,17 +40,34 @@ class DotMatrixChart extends Component {
             let randomNo = randomSwipes - randomYes;
             newArticles.push({
                 id: '12123',
-                paper: 'nos',
+                paper: papers[(Math.floor(Math.random() * (4 - 0 + 1) + 0))],
                 title: 'Dit gebeurt er wanneer je een auto met automaat bij 100 km/u in zijn achteruit zet.',
-                url: 'https://nos.nl',
+                url: 'https://test.com',
                 timestamp: '05/11/2019',
                 swipes: randomSwipes,
                 yes: randomYes,
-                no: randomNo
+                no: randomNo,
+                totalYesPercent: (randomYes / randomSwipes)
             })
         }
 
+        newArticles = orderBy(newArticles, ['totalYesPercent'], ['asc'])
+
         this.setState({ articles: newArticles });
+    }
+
+    dropdownFilterDots = (event) => {
+        let filterDots = this.state.articles;
+        switch (event.target.value) {
+            case 'yesToNo':
+                filterDots = orderBy(filterDots, ['totalYesPercent'], ['asc']);
+                break;
+            case 'noToYes':
+                filterDots = orderBy(filterDots, ['totalYesPercent'], ['desc']);
+                break;
+        }
+
+        this.setState({ articles: filterDots });
     }
 
     hoverDot = (article) => {
@@ -81,12 +101,12 @@ class DotMatrixChart extends Component {
                     <div className="col-xs-12 col-md-5">
                         <h4>Filters:</h4>
                         <div className="dot-matrix-chart__filters">
-                            <select className="dropdown">
-                                <option>Hoog naar laag</option>
-                                <option>Laag naar hoog</option>
-                                <option>Datum</option>
+                            <select className="dropdown" onChange={this.dropdownFilterDots}>
+                                <option value="yesToNo">Ja naar Nee</option>
+                                <option value="noToYes">Nee naar Ja</option>
+                                {/* <option>Datum</option> */}
                             </select>
-                            <Checkbox label="Per krant" checked={this.state.perKrant} onClick={() => { this.toggleCheckBox('perKrant') }} />
+                            {/* <Checkbox label="Per krant" checked={this.state.perKrant} onClick={() => { this.toggleCheckBox('perKrant') }} /> */}
                         </div>
                     </div>
                 </div>
@@ -157,16 +177,30 @@ class DotMatrixChart extends Component {
                                 </div>
                             }
                             {this.state.articles.length > 0 &&
-                                this.state.articles.map((article, index) => {
-                                    return (
-                                        <div className="dot-matrix-chart__dot-container"
-                                            key={index}
-                                            onMouseEnter={() => { this.hoverDot(article) }}
-                                            onMouseLeave={() => { this.leaveDot(article) }}>
-                                            <div className="dot-matrix-chart__dot" style={{ backgroundColor: mix('#FFD747', '#26BFBF', (article.yes / article.swipes)) }}></div>
-                                        </div>
-                                    );
-                                })
+                                <AnimatePresence>
+                                    {this.state.articles.map((article, index) => {
+                                        if ((article.paper === 'nos' && !this.state.nos) ||
+                                            (article.paper === 'nrc' && !this.state.nrc) ||
+                                            (article.paper === 'telegraaf' && !this.state.telegraaf) ||
+                                            (article.paper === 'nu' && !this.state.nu) ||
+                                            (article.paper === 'joop' && !this.state.joop)) {
+                                            return;
+                                        }
+                                        return (
+                                            <motion.div
+                                                positionTransition={{ duration: 0.3, type: "tween" }}
+                                                initial={{ opacity: 0, scale: 0 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0 }}
+                                                className="dot-matrix-chart__dot-container"
+                                                key={index}
+                                                onMouseEnter={() => { this.hoverDot(article) }}
+                                                onMouseLeave={() => { this.leaveDot(article) }}>
+                                                <div className="dot-matrix-chart__dot" style={{ backgroundColor: mix('#FFD747', '#26BFBF', article.totalYesPercent) }}></div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </AnimatePresence>
                             }
                         </div>
                     </div>
