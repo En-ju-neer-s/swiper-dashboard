@@ -1,0 +1,1 @@
+export const SWIPER_API = `https://api.isditclickbait.nl/`;
