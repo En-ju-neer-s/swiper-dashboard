@@ -7,6 +7,7 @@ import DotMatrixChart from '../components/DotMatrixChart';
 import { fetchStats } from '../redux/actions/stats';
 import { fetchSwipes } from '../redux/actions/swipes';
 import { fetchUsers } from '../redux/actions/users';
+import { fetchArticles } from '../redux/actions/articles';
 import { Line } from 'react-chartjs-2';
 import { map, reverse } from 'lodash';
 
@@ -19,6 +20,7 @@ class Main extends React.Component {
         this.props.fetchStats();
         this.props.fetchSwipes();
         this.props.fetchUsers();
+        this.props.fetchArticles();
     }
 
     render() {
@@ -63,13 +65,15 @@ class Main extends React.Component {
             <div className="main wrap container-fluid">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h1>Swiper Dashboard (Mock data!)</h1>
+                        <h1>Swiper Dashboard</h1>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-xs-12 col-md-6">
                         <h2>Artikel overzicht</h2>
-                        <DotMatrixChart />
+                        {this.props.articles.length > 0 &&
+                            <DotMatrixChart articles={this.props.articles} />
+                        }
                     </div>
                     <div className="col-xs-12 col-md-6">
                         <div className="row">
@@ -123,7 +127,7 @@ class Main extends React.Component {
                                 </div>
                             </div>
                             <div className="col-xs-12 col-md-6">
-                                <h2>Voortgang</h2>
+                                {/* <h2>Voortgang</h2> */}
                             </div>
                         </div>
                         <div className="row">
@@ -161,12 +165,13 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         fetchStats,
         fetchSwipes,
-        fetchUsers
+        fetchUsers,
+        fetchArticles,
     }, dispatch);
 }
 
-function mapStateToProps({ stats, swipes, users }) {
-    return { stats, swipes, users };
+function mapStateToProps({ stats, swipes, users, articles }) {
+    return { stats, swipes, users, articles };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
