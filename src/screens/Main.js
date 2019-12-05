@@ -127,7 +127,7 @@ class Main extends React.Component {
                                 </div>
                             </div>
                             <div className="col-xs-12 col-md-6">
-                                <h2>Voortgang</h2>
+                                {/* <h2>Voortgang</h2> */}
                             </div>
                         </div>
                         <div className="row">
