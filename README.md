@@ -1,2 +1,1 @@
 # Swiper dashboard
-deploy test
