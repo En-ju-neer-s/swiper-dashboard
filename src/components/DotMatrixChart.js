@@ -105,7 +105,7 @@ class DotMatrixChart extends Component {
                                 />
                             )}
                             {this.props.articles.length > 0 &&
-                                <AnimatePresence>
+                                <>
                                     {this.state.articles.map((article, index) => {
                                         // return <span>test</span>;
                                         if ((article.source === 'Nos' && !this.state.nos) ||
@@ -130,9 +130,9 @@ class DotMatrixChart extends Component {
                                         return (
                                             <motion.div
                                                 positionTransition={{ duration: 0.3, type: "tween" }}
-                                                initial={{ opacity: 0, scale: 0 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0 }}
+                                                // initial={{ opacity: 0, scale: 0 }}
+                                                // animate={{ opacity: 1, scale: 1 }}
+                                                // exit={{ opacity: 0, scale: 0 }}
                                                 className="dot-matrix-chart__dot-container"
                                                 key={index}
                                                 onMouseEnter={() => { this.hoverDot(article) }}
@@ -141,7 +141,7 @@ class DotMatrixChart extends Component {
                                             </motion.div>
                                         );
                                     })}
-                                </AnimatePresence>
+                                </>
                             }
                         </div>
                     </div>
