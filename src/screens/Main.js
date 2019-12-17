@@ -3,30 +3,49 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CountUp from 'react-countup';
 import DotMatrixChart from '../components/DotMatrixChart';
-// import LineChart from '../components/LineChart'
 import { fetchStats } from '../redux/actions/stats';
 import { fetchSwipes } from '../redux/actions/swipes';
 import { fetchUsers } from '../redux/actions/users';
 import { fetchArticles } from '../redux/actions/articles';
+import { fetchLeaderboard } from '../redux/actions/leaderboard';
 import { Line } from 'react-chartjs-2';
 import { map, reverse } from 'lodash';
 
 class Main extends React.Component {
     constructor(props) {
         super(props);
+        this.state = ({
+            prevStats: []
+        })
+
+        this.reduxInterval = null;
     }
 
     componentDidMount() {
+        this.fetchData();
+        this.reduxInterval = setInterval(() => {
+            this.fetchData();
+            this.setState({ prevStats: this.props.stats })
+        }, 10000);
+    }
+
+    fetchData = () => {
         this.props.fetchStats();
         this.props.fetchSwipes();
         this.props.fetchUsers();
         this.props.fetchArticles();
+        this.props.fetchLeaderboard();
+    }
+
+    componentWillUnmount() {
+        if (this.reduxInterval) {
+            clearInterval(this.reduxInterval);
+        }
     }
 
     render() {
         let swipesData;
         if (this.props.swipes !== undefined) {
-            // const data = 
             const dataLabels = reverse(map(this.props.swipes, '_id'));
             const dataCount = reverse(map(this.props.swipes, 'count'));
 
@@ -89,7 +108,7 @@ class Main extends React.Component {
                                         <span className="statistics__number">
                                             {this.props.stats &&
                                                 <CountUp
-                                                    start={0}
+                                                    start={this.state.prevStats ? this.state.prevStats.allUser : 0}
                                                     end={this.props.stats.allUser} />
                                             }
                                         </span>
@@ -99,7 +118,7 @@ class Main extends React.Component {
                                         <span className="statistics__number">
                                             {this.props.stats &&
                                                 <CountUp
-                                                    start={0}
+                                                    start={this.state.prevStats ? this.state.prevStats.allSwipes : 0}
                                                     end={this.props.stats.allSwipes} />
                                             }
                                         </span>
@@ -111,7 +130,7 @@ class Main extends React.Component {
                                         <span className="statistics__number">
                                             {this.props.stats &&
                                                 <CountUp
-                                                    start={0}
+                                                    start={this.state.stats ? this.state.stats.averageSwipes : 0}
                                                     end={this.props.stats.averageSwipes} />
                                             }
                                         </span>
@@ -127,7 +146,27 @@ class Main extends React.Component {
                                 </div>
                             </div>
                             <div className="col-xs-12 col-md-6">
-                                {/* <h2>Voortgang</h2> */}
+                                <h2>Leaderboard</h2>
+                                <table>
+                                    {/* <thead>
+                                        <td></td>
+                                        <td>swipes</td>
+                                        <td>user</td>
+                                    </thead> */}
+                                    <tbody>
+                                        {this.props.leaderboard &&
+                                            this.props.leaderboard.map((item, index) =>
+                                                <tr key={item._id}>
+                                                    <td>{index + 1}.</td>
+                                                    <td><b>{item.count}</b></td>
+                                                    <td>{item.username}</td>
+                                                </tr>
+                                            )
+                                        }
+
+                                    </tbody>
+                                </table>
+
                             </div>
                         </div>
                         <div className="row">
@@ -167,11 +206,12 @@ function mapDispatchToProps(dispatch) {
         fetchSwipes,
         fetchUsers,
         fetchArticles,
+        fetchLeaderboard,
     }, dispatch);
 }
 
-function mapStateToProps({ stats, swipes, users, articles }) {
-    return { stats, swipes, users, articles };
+function mapStateToProps({ stats, swipes, users, articles, leaderboard }) {
+    return { stats, swipes, users, articles, leaderboard };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
