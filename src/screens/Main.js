@@ -147,12 +147,7 @@ class Main extends React.Component {
                             </div>
                             <div className="col-xs-12 col-md-6">
                                 <h2>Leaderboard</h2>
-                                <table>
-                                    {/* <thead>
-                                        <td></td>
-                                        <td>swipes</td>
-                                        <td>user</td>
-                                    </thead> */}
+                                <table className="leaderboard">
                                     <tbody>
                                         {this.props.leaderboard &&
                                             this.props.leaderboard.map((item, index) =>
