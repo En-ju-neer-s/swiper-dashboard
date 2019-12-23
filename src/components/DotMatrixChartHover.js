@@ -20,11 +20,13 @@ class DotMatrixChartHover extends Component {
         const yesWidthPercentage = bothNo ? 50 : Math.round(article.clickbait.yesPercentage * 100);
         const noWidthPercentage = bothNo ? 50 : Math.round(article.clickbait.noPercentage * 100);
 
+        const articleTitle = (article.title || article.title !== "") ? article.title : article['og-title'];
+
         return (
             <div className="dot-matrix-chart__info">
                 <div className="dot-matrix-chart__info-container">
                     <div className="dot-matrix-chart__info-title">
-                        <p>{decode(article.title)}</p>
+                        <p>{decode(articleTitle)}</p>
                     </div>
                     <div className="dot-matrix-chart__info-details">
                         <a href={article.url}>{article.source}</a>
