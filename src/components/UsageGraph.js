@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import * as chartjs from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import 'chartjs-plugin-annotation';
 import decode from '../utils/decode';
 import Chart from "react-apexcharts";
 import { map, sortBy } from 'lodash';
