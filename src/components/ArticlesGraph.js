@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import 'chartjs-plugin-annotation';
+import React, { Component } from 'react';
 import decode from '../utils/decode';
 import Chart from "react-apexcharts";
 import { map, slice, reverse, orderBy } from 'lodash';
