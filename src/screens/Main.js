@@ -2,14 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CountUp from 'react-countup';
+import { mix } from 'chroma-js';
 import DotMatrixChart from '../components/DotMatrixChart';
 import { fetchStats } from '../redux/actions/stats';
 import { fetchSwipes } from '../redux/actions/swipes';
 import { fetchUsers } from '../redux/actions/users';
 import { fetchArticles } from '../redux/actions/articles';
 import { fetchLeaderboard } from '../redux/actions/leaderboard';
-import { Line } from 'react-chartjs-2';
-import { map, reverse } from 'lodash';
+import ArticlesGraph from '../components/ArticlesGraph';
+import UsageGraph from '../components/UsageGraph';
 
 class Main extends React.Component {
     constructor(props) {
@@ -23,10 +24,10 @@ class Main extends React.Component {
 
     componentDidMount() {
         this.fetchData();
-        this.reduxInterval = setInterval(() => {
-            this.fetchData();
-            this.setState({ prevStats: this.props.stats })
-        }, 10000);
+        // this.reduxInterval = setInterval(() => {
+        //     this.fetchData();
+        //     this.setState({ prevStats: this.props.stats })
+        // }, 10000);
     }
 
     fetchData = () => {
@@ -44,42 +45,6 @@ class Main extends React.Component {
     }
 
     render() {
-        let swipesData;
-        if (this.props.swipes !== undefined) {
-            const dataLabels = reverse(map(this.props.swipes, '_id'));
-            const dataCount = reverse(map(this.props.swipes, 'count'));
-
-            swipesData = {
-                labels: dataLabels,
-                datasets: [
-                    {
-                        fill: false,
-                        lineTension: 0.1,
-                        borderColor: '#26BFBF',
-                        data: dataCount
-                    }
-                ]
-            };
-        }
-
-        let usersData;
-        if (this.props.users !== undefined) {
-            const dataLabels = reverse(map(this.props.users, '_id'));
-            const dataCount = reverse(map(this.props.users, 'count'));
-
-            usersData = {
-                labels: dataLabels,
-                datasets: [
-                    {
-                        fill: false,
-                        lineTension: 0.1,
-                        borderColor: '#FFD747',
-                        data: dataCount
-                    }
-                ]
-            };
-        }
-
         return (
             <div className="main wrap container-fluid">
                 <div className="row">
@@ -89,10 +54,22 @@ class Main extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-xs-12 col-md-6">
-                        <h2>Artikel overzicht</h2>
-                        {this.props.articles.length > 0 &&
-                            <DotMatrixChart articles={this.props.articles} />
-                        }
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <h2>Artikel overzicht</h2>
+                                {this.props.articles.length > 0 &&
+                                    <DotMatrixChart articles={this.props.articles} />
+                                }
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <h2>Artikel verhoudingen</h2>
+                                {(this.props.articles.length > 0 && this.props.stats !== null) &&
+                                    <ArticlesGraph rawArticles={this.props.articles} calculatedAverage={this.props.stats.calculatedAverage} />
+                                }
+                            </div>
+                        </div>
                     </div>
                     <div className="col-xs-12 col-md-6">
                         <div className="row">
@@ -153,12 +130,11 @@ class Main extends React.Component {
                                             this.props.leaderboard.map((item, index) =>
                                                 <tr key={item._id}>
                                                     <td>{index + 1}.</td>
-                                                    <td><b>{item.count}</b></td>
-                                                    <td>{item.username}</td>
+                                                    <td><b style={{ marginRight: '5px' }}>{item.count}</b></td>
+                                                    <td style={{ color: mix('#FFD747', '#26BFBF', ((index + 1) / 10)) }}>{item.username}</td>
                                                 </tr>
                                             )
                                         }
-
                                     </tbody>
                                 </table>
 
@@ -166,31 +142,15 @@ class Main extends React.Component {
                         </div>
                         <div className="row">
                             <div className="col-xs-12">
-                                <h2>Aantal swipes per dag</h2>
-                                <Line
-                                    data={swipesData}
-                                    legend={{ display: false }}
-                                    width={100}
-                                    height={50}
-                                    options={{ maintainAspectRatio: false }} />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <h2>Aantal gebruikers per dag</h2>
-                                {this.props.users[0] &&
-                                    <Line
-                                        data={usersData}
-                                        legend={{ display: false }}
-                                        width={100}
-                                        height={50}
-                                        options={{ maintainAspectRatio: false }} />
+                                <h2>Gebruikers data</h2>
+                                {(this.props.users.length > 0 && this.props.swipes.length > 0) &&
+                                    <UsageGraph usersData={this.props.users} swipesData={this.props.swipes} />
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }
